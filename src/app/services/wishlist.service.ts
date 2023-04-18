@@ -11,11 +11,20 @@ export class WishlistService {
   wishlistItemsList = new BehaviorSubject<any[]>(this.wishlistItems);
 
   getTotalWishlistItems(){
-    return this,this.wishlistItemsList.asObservable();
+    return this.wishlistItemsList.asObservable();
   }
   addItemsToWishilist(item:any){
     this.wishlistItems.push(item);
-    this.wishlistItemsList.next(this.wishlistItems);
+    const uniqueWishlistItems = this.wishlistItems.reduce((acc:any,curr:any) => {
+      const isExist = acc.find((item:any) => item.id === curr.id && item.name === curr.name);
+      if(isExist){
+        isExist.count++;
+      }else{
+        acc.push({ ...curr, count: 1 });
+      }
+      return acc;
+    },[])
+    this.wishlistItemsList.next(uniqueWishlistItems);
   }
   removeItemFromWishlist(ele:any){
     this.wishlistItems.map((item:any,index) => {
