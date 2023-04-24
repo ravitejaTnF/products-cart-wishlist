@@ -19,7 +19,11 @@ export class ProductsComponent implements OnInit {
   getProductData(){
     this.productService.getProducts().subscribe((res:any) => {
       this.productData = res;
-    })
+    },
+    (error:any) => {
+      console.log(error.status);
+    }
+    )
   }
 
   addtocart(item:any){
